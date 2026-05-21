@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title >RR Risk Panel | Janith K</title>
+    <style>
+        :root {
+            --bg: #1a1c1e;
+            --card: #25282c;
+            --accent: #63ead4;
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+            --input-bg: #111315;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Quick Copy Bar - Top */
+        .quick-bar {
+            background: #1f2228;
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* TG Chat Number Input Bar */
+        .tg-input-bar {
+            background: #1f2228;
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .tg-input-bar.hidden {
+            display: none;
+        }
+
+        .tg-number-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .tg-number-input {
+            background: var(--input-bg);
+            border: none;
+            color: var(--text-main);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+            width: 150px;
+        }
+
+        .tg-number-input:focus {
+            background: #1a1d20;
+            box-shadow: 0 0 0 2px rgba(99, 234, 212, 0.2);
+        }
+
+        .tg-number-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .quick-input {
+            flex: 1;
+            background: var(--input-bg);
+            border: none;
+            color: var(--text-main);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .quick-input:focus {
+            background: #1a1d20;
+            box-shadow: 0 0 0 2px rgba(99, 234, 212, 0.2);
+        }
+
+        .quick-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .quick-copy-btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
+        }
+
+        .quick-copy-btn:hover {
+            background: #4fcfd8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 234, 212, 0.4);
+        }
+
+        .quick-copy-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Header with Logo */
+        header {
+            background: var(--card);
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .logo-box {
+            display: inline-block;
+            border: 2px solid var(--accent);
+            padding: 4px 14px;
+            border-radius: 6px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background: var(--card);
+            border-bottom: 2px solid #334155;
+            padding: 0;
+            gap: 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            color: var(--text-dim);
+            border: none;
+            padding: 14px 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Main Content */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: none;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--bg);
+            scroll-behavior: smooth;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .list-wrapper {
+            max-width: 550px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Copy-Focused Item Design */
+        .remark-item {
+            background: var(--card);
+            margin-bottom: 12px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            transition: all 0.2s;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .remark-item:hover {
+            border-color: var(--accent);
+            background: #2d3238;
+            box-shadow: 0 4px 16px rgba(99, 234, 212, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .remark-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            word-break: break-word;
+            color: var(--text-main);
+            flex: 1;
+        }
+
+        /* Copy Button on Item */
+        .copy-btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .copy-btn:hover {
+            background: #4fcfd8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 234, 212, 0.3);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Add Button - Bottom Right */
+        .add-btn-floating {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 52px;
+            height: 52px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(99, 234, 212, 0.3);
+            z-index: 50;
+            font-weight: bold;
+        }
+
+        .add-btn-floating:hover {
+            background: #4fcfd8;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(99, 234, 212, 0.4);
+        }
+
+        .add-btn-floating:active {
+            transform: scale(0.95);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Modal */
+        .modal {
+            background: var(--card);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .modal-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid #334155;
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            outline: none;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .modal-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(99, 234, 212, 0.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-save {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .modal-btn-save:hover {
+            background: #4fcfd8;
+            transform: translateY(-2px);
+        }
+
+        .modal-btn-cancel {
+            background: transparent;
+            border: 1px solid #334155;
+            color: var(--text-dim);
+        }
+
+        .modal-btn-cancel:hover {
+            background: #334155;
+            color: var(--text-main);
+        }
+
+        /* Toast */
+        #toast {
+            visibility: hidden;
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: #000;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            z-index: 999;
+            box-shadow: 0 4px 16px rgba(99, 234, 212, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: pop 0.3s ease forwards;
+        }
+
+        @keyframes pop {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 10px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        footer {
+            background: var(--card);
+            padding: 10px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            border-top: 1px solid #334155;
+        }
+
+        .credit-name {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-dim);
+            padding: 60px 20px;
+            font-size: 0.9rem;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+
+        .inline-input {
+            background: var(--input-bg);
+            border: 1px solid #334155;
+            color: var(--text-main);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            outline: none;
+            width: 120px;
+            transition: all 0.2s;
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+
+        .inline-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(99, 234, 212, 0.2);
+        }
+
+        .inline-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .dynamic-text {
+            display: inline;
+        }
+
+        .paste-btn-inline {
+            background: #334155;
+            color: var(--text-main);
+            border: 1px solid #475569;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 6px;
+            margin-right: 6px;
+            font-weight: 600;
+        }
+
+        .paste-btn-inline:hover {
+            background: #475569;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .paste-btn-inline:active {
+            transform: scale(0.95);
+        }
+
+        .amount-display {
+            color: var(--accent);
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .inline-select {
+            background: var(--input-bg);
+            color: var(--text-main);
+            border: 1px solid #334155;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .inline-select:hover {
+            border-color: var(--accent);
+        }
+
+        .inline-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(99, 234, 212, 0.1);
+        }
+
+        .inline-select option {
+            background: var(--card);
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header with Logo -->
+<header>
+    <div class="logo-box">JK</div>
+</header>
+
+<!-- Tab Navigation -->
+<div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('tg-chat', event)">📱 TG Chat</button>
+    <button class="tab-btn" onclick="switchTab('risk-remark', event)">⚠️ Risk Remark</button>
+</div>
+
+<!-- TG Chat Number Input Bar -->
+<div class="tg-input-bar" id="tgInputBar">
+    <span class="tg-number-label">RS:</span>
+    <input type="text" id="tgNumberInput" class="tg-number-input" placeholder="Enter number..." oninput="updateTGNumbers()">
+</div>
+
+<!-- Quick Copy Bar -->
+<div class="quick-bar">
+    <input type="text" id="quickInput" class="quick-input" placeholder="Quick type & copy...">
+    <button class="quick-copy-btn" onclick="quickCopy()">COPY</button>
+</div>
+
+<!-- Content -->
+<div class="content-wrapper">
+    <!-- TG Chat Tab -->
+    <div id="tg-chat" class="tab-content active">
+        <div class="list-wrapper" id="tg-list"></div>
+    </div>
+
+    <!-- Risk Remark Tab -->
+    <div id="risk-remark" class="tab-content">
+        <div class="list-wrapper" id="risk-list"></div>
+    </div>
+</div>
+
+<!-- Add Button (Floating) -->
+<button class="add-btn-floating" onclick="openModal()">+</button>
+
+<!-- Add Item Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-title" id="modalTitle">Add New Item</div>
+        <textarea id="modalInput" class="modal-input" placeholder="Enter text..."></textarea>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="modal-btn modal-btn-save" onclick="saveItem()">Add</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast">Copied!</div>
+
+<!-- Footer -->
+<footer>
+    Created by <span class="credit-name" >Janith K</span>
+</footer>
+
+<script>
+    const data = {
+        tg: [
+            "Checking team - rs__",
+            "On it team. Thanks - rs__",
+            "Done team. Thanks - rs__",
+            "Verified team. Thanks - rs__",
+            "Rejected team. Thanks - rs__",
+			"For Further Checking - rs__",
+            "Hi team this account is for further review thanks — rs__",
+            "Hi team as per checking account is for adjustment will be back to active status once adjustment is done. Thank you — rs__",
+            "Confirmed fraud activity, cannot back to active as per our superior's instructions, Thanks - rs__",
+            "Hi team upon checking this account is  Suspicious betting activities, account under review by Sports Provider and withdrawal on hold until 19th May-2026. Thank you - rs__",
+            "Hi team upon checking this account is for further checking. Wait for our superior decision. Thank you - rs__",
+        ],
+        risk: [
+            
+            "Deposit Required",
+            "AB Bet. Invalid Turnover: ",
+            "Active Bonus Invalid TO, Need to reach : ",
+            "MAC - Multiple Account Creation-",
+            "HBF - PG Hide Balance Fraud",
+            "RAF - RAF Bonus Abuser -",
+            "CDF - Chip Dumping Fraud With -",
+            "SUSPICIOUS In Out Fund",
+			"Suspicious bets in Bookmaker Market-SOCCER",
+            "Suspicious Taixiu winning",
+			//"CDF - Chip Dumping Fraud With - UserName(M1) in EVOLUTION/Bac Bo / Suspicious In Out Fund",
+			"Suspicious  Fund in Fund out in EVOLUTION Fan Tan",
+			"Suspicious Sports Hedging",
+			"Suspicious Cricket Sports Bets",
+        ]
+    };
+
+    let currentTab = 'tg';
+    const toast = document.getElementById('toast');
+    const quickInput = document.getElementById('quickInput');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalInput = document.getElementById('modalInput');
+    const modalTitle = document.getElementById('modalTitle');
+
+    function switchTab(tab, event) {
+        currentTab = tab;
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(tab).classList.add('active');
+        event.target.classList.add('active');
+        
+        // Show/hide TG input bar based on active tab
+        const tgInputBar = document.getElementById('tgInputBar');
+        if (tab === 'tg-chat') {
+            tgInputBar.classList.remove('hidden');
+        } else {
+            tgInputBar.classList.add('hidden');
+        }
+    }
+
+    function notify(msg = "Copied!") {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1200);
+    }
+
+    function copyText(text) {
+        navigator.clipboard.writeText(text).then(() => notify("Copied!"));
+    }
+
+    function quickCopy() {
+        const text = quickInput.value.trim();
+        if (text) {
+            copyText(text);
+            quickInput.value = "";
+            quickInput.focus();
+        }
+    }
+
+    quickInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') quickCopy();
+    });
+
+    function renderList(type) {
+        const listEl = document.getElementById(`${type}-list`);
+        const items = data[type];
+
+        if (items.length === 0) {
+            listEl.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <p>No items. Tap + to add one!</p>
+                </div>
+            `;
+            return;
+        }
+
+        listEl.innerHTML = items.map((text, idx) => {
+            // Check if this is the AB Bet item with dynamic input
+            if (text.includes("AB Bet. Invalid Turnover:")) {
+                return `
+                    <div class="remark-item">
+                        <div style="flex: 1;">
+                            <span class="dynamic-text">AB Bet. Invalid Turnover: </span>
+                            <input type="text" id="abBetInput" class="inline-input" placeholder="enter amount" onchange="updateABBetAmount()" oninput="updateABBetAmount()" title="Enter or paste amount here">
+                            <span id="abBetAmount" class="amount-display"></span>
+                        </div>
+                        <button class="copy-btn" onclick="copyABBetText()" title="Copy to clipboard">Copy</button>
+                    </div>
+                `;
+            }
+            
+            // Check if this is the Active Bonus item with dynamic input
+            if (text.includes("Active Bonus Invalid TO, Need to reach :")) {
+                return `
+                    <div class="remark-item">
+                        <div style="flex: 1;">
+                            <span class="dynamic-text">Active Bonus Invalid TO, Need to reach : </span>
+                            <input type="text" id="activeBonusInput" class="inline-input" placeholder="enter amount" onchange="updateActiveBonusAmount()" oninput="updateActiveBonusAmount()" title="Enter or paste amount here">
+                            <span id="activeBonusAmount" class="amount-display"></span>
+                        </div>
+                        <button class="copy-btn" onclick="copyActiveBonusText()" title="Copy to clipboard">Copy</button>
+                    </div>
+                `;
+            }
+            
+            // Check if this is the CDF item with dynamic dropdowns and input
+            if (text.includes("CDF - Chip Dumping Fraud With -")) {
+                return `
+                    <div class="remark-item">
+                        <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                <span class="dynamic-text">CDF - Chip Dumping Fraud With - </span>
+                                <input type="text" id="cdfUsernameInput" class="inline-input" placeholder="UserName" style="width: 100px;" onchange="updateCDFText()" oninput="updateCDFText()" title="Enter username">
+                                <span style="color: var(--text);">(</span>
+                                <input type="text" id="cdfM1Input" class="inline-input" placeholder="M1" style="width: 60px;" onchange="updateCDFText()" oninput="updateCDFText()" title="Enter identifier like M1, M2, etc">
+                                <span style="color: var(--text);">)</span>
+                                <span style="color: var(--text);"> in </span>
+                                <select id="cdfPlatformDropdown" class="inline-select" onchange="updateCDFText()" title="Select platform">
+                                    <option value="">-- Select --</option>
+                                    <option value="EVOLUTION">EVOLUTION</option>
+                                    <option value="SEXYBCRT">SEXYBCRT</option>
+                                    <option value="KINGMAKER">KINGMAKER</option>
+                                    <option value="PP">PP</option>
+                                </select>
+                                <span style="color: var(--text);">/</span>
+                                <select id="cdfGameDropdown" class="inline-select" onchange="updateCDFText()" title="Select game">
+                                    <option value="">-- Select --</option>
+                                    <option value="Bac Bo">Bac Bo</option>
+                                    <option value="Baccarat">Baccarat</option>
+                                    <option value="Roulette">Roulette</option>
+                                </select>
+                                <span style="color: var(--text);"> / Suspicious In Out Fund</span>
+                            </div>
+                            <span id="cdfPreview" style="font-size: 0.85rem; color: var(--text-dim); margin-top: 4px;"></span>
+                        </div>
+                        <button class="copy-btn" onclick="copyCDFText()" title="Copy to clipboard">Copy</button>
+                    </div>
+                `;
+            }
+            
+            // Regular items
+            return `
+                <div class="remark-item">
+                    <span class="remark-text">${text}</span>
+                    <button class="copy-btn" onclick="copyText('${text.replace(/'/g, "\\'")}')" title="Copy to clipboard">Copy</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function updateABBetAmount() {
+        const input = document.getElementById('abBetInput');
+        const display = document.getElementById('abBetAmount');
+        
+        if (!input || !display) return;
+        
+        const value = input.value.trim();
+        display.textContent = value;
+    }
+
+    function copyABBetText() {
+        const amount = document.getElementById('abBetAmount')?.textContent || '';
+        
+        if (!amount) {
+            notify("No amount set!");
+            return;
+        }
+        
+        let formattedAmount = amount;
+        
+        // Try to format the number
+        const cleanNum = amount.replace(/,/g, '');
+        const num = parseFloat(cleanNum);
+        
+        if (!isNaN(num)) {
+            formattedAmount = num.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+        
+        const fullText = `AB Bet. Invalid Turnover: ${formattedAmount}`;
+        copyText(fullText);
+    }
+
+    function updateActiveBonusAmount() {
+        const input = document.getElementById('activeBonusInput');
+        const display = document.getElementById('activeBonusAmount');
+        
+        if (!input || !display) return;
+        
+        const value = input.value.trim();
+        display.textContent = value;
+    }
+
+    function copyActiveBonusText() {
+        const amount = document.getElementById('activeBonusAmount')?.textContent || '';
+        
+        if (!amount) {
+            notify("No amount set!");
+            return;
+        }
+        
+        let formattedAmount = amount;
+        
+        // Try to format the number
+        const cleanNum = amount.replace(/,/g, '');
+        const num = parseFloat(cleanNum);
+        
+        if (!isNaN(num)) {
+            formattedAmount = num.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+        
+        const fullText = `Active Bonus Invalid TO, Need to reach : ${formattedAmount}`;
+        copyText(fullText);
+    }
+
+    function updateCDFText() {
+        const username = document.getElementById('cdfUsernameInput')?.value.trim() || '';
+        const m1 = document.getElementById('cdfM1Input')?.value.trim() || '';
+        const platform = document.getElementById('cdfPlatformDropdown')?.value || '';
+        const game = document.getElementById('cdfGameDropdown')?.value || '';
+        const preview = document.getElementById('cdfPreview');
+        
+        if (!preview) return;
+        
+        // Build preview text
+        let previewText = 'CDF - Chip Dumping Fraud With -';
+        
+        if (username) {
+            previewText += ` ${username}`;
+            if (m1) {
+                previewText += `(${m1})`;
+            }
+        }
+        
+        if (platform || game) {
+            previewText += ' in';
+            if (platform) previewText += ` ${platform}`;
+            if (game) previewText += `/${game}`;
+        }
+        
+        previewText += ' / Suspicious In Out Fund';
+        
+        preview.textContent = 'Preview: ' + previewText;
+    }
+
+    function copyCDFText() {
+        const username = document.getElementById('cdfUsernameInput')?.value.trim() || '';
+        const m1 = document.getElementById('cdfM1Input')?.value.trim() || '';
+        const platform = document.getElementById('cdfPlatformDropdown')?.value || '';
+        const game = document.getElementById('cdfGameDropdown')?.value || '';
+        
+        let text = 'CDF - Chip Dumping Fraud With -';
+        
+        // Add username with M1 only if username exists
+        if (username) {
+            text += ` ${username}`;
+            if (m1) {
+                text += `(${m1})`;
+            }
+        }
+        
+        // Add platform and game only if they're selected
+        if (platform || game) {
+            text += ' in';
+            if (platform) text += ` ${platform}`;
+            if (game) text += `/${game}`;
+        }
+        
+        text += ' / Suspicious In Out Fund';
+        
+        copyText(text);
+    }
+
+    function openModal() {
+        modalTitle.textContent = "Add New Item";
+        modalInput.value = "";
+        modalOverlay.classList.add('active');
+        setTimeout(() => modalInput.focus(), 100);
+    }
+
+    function closeModal(event) {
+        if (event && event.target !== modalOverlay) return;
+        modalOverlay.classList.remove('active');
+    }
+
+    function saveItem() {
+        const text = modalInput.value.trim();
+        if (!text) {
+            notify("Please enter text!");
+            return;
+        }
+
+        if (data[currentTab]) {
+            data[currentTab].push(text);
+            notify("Added!");
+            renderList(currentTab);
+            modalOverlay.classList.remove('active');
+        }
+    }
+
+    modalInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && e.ctrlKey) saveItem();
+    });
+
+    // TG Numbers Update Function
+    function updateTGNumbers() {
+        const input = document.getElementById('tgNumberInput');
+        const numberInput = input.value.trim();
+        
+        // Add "rs" prefix to the number
+        const number = numberInput ? `rs${numberInput}` : '';
+        
+        if (!number) {
+            // If input is empty, revert to original
+            data.tg = [
+                "Checking team - rs__",
+                "On it team. Thanks - rs__",
+                "Done team. Thanks - rs__",
+                "Verified team. Thanks - rs__",
+                "Rejected team. Thanks - rs__",
+                "For Further Checking - rs__",
+                "Hi team this account is for further review thanks — rs__",
+                "Hi team as per checking account is for adjustment will be back to active status once adjustment is done. Thank you — rs__",
+                "Confirmed fraud activity, cannot back to active as per our superior's instructions, Thanks - rs__",
+                "Hi team upon checking this account is  Suspicious betting activities, account under review by Sports Provider and withdrawal on hold until 19th May-2026. Thank you - rs__",
+                "Hi team upon checking this account is for further checking. Wait for our superior decision. Thank you - rs__",
+            ];
+        } else {
+            // Replace rs__ with the entered number
+            data.tg = [
+                `Checking team - ${number}`,
+                `On it team. Thanks - ${number}`,
+                `Done team. Thanks - ${number}`,
+                `Verified team. Thanks - ${number}`,
+                `Rejected team. Thanks - ${number}`,
+                `For Further Checking - ${number}`,
+                `Hi team this account is for further review thanks — ${number}`,
+                `Hi team as per checking account is for adjustment will be back to active status once adjustment is done. Thank you — ${number}`,
+                `Confirmed fraud activity, cannot back to active as per our superior's instructions, Thanks - ${number}`,
+                `Hi team upon checking this account is  Suspicious betting activities, account under review by Sports Provider and withdrawal on hold until 19th May-2026. Thank you - ${number}`,
+                `Hi team upon checking this account is for further checking. Wait for our superior decision. Thank you - ${number}`,
+            ];
+        }
+        
+        // Re-render only if TG tab is active
+        if (currentTab === 'tg') {
+            renderList('tg');
+        }
+    }
+
+    // Initial render
+    renderList('tg');
+    renderList('risk');
+</script>
+
+</body>
+</html>
