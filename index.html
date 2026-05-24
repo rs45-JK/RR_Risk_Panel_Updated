@@ -265,6 +265,18 @@
             transform: translateY(0);
         }
 
+        /* Footer - Bottom Left */
+        .footer {
+            position: fixed;
+            bottom: 12px;
+            left: 16px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            z-index: 100;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
         /* Add Button - Bottom Right */
         .add-btn-floating {
             position: fixed;
@@ -649,10 +661,8 @@
 <!-- Toast Notification -->
 <div id="toast">Copied!</div>
 
-<!-- Footer -->
-<footer>
-    Created by <span class="credit-name">Janith K</span> | JK Dev
-</footer>
+<!-- Footer - Bottom Left -->
+<div class="footer">Created by Janith K</div>
 
 <script>
     const data = {
@@ -981,41 +991,28 @@
         if (e.key === 'Enter' && e.ctrlKey) saveItem();
     });
 
+    // TG COPY TEMPLATES - EASY TO ADD NEW LINES (just add to this array)
+    const TG_TEMPLATES = [
+        "Checking team - rs__",
+        "On it team. Thanks - rs__",
+        "Done team. Thanks - rs__",
+        "Verified team. Thanks - rs__",
+        "Rejected team. Thanks - rs__",
+        "For Further Checking - rs__",
+        "Hi team this account is for further review thanks — rs__",
+        "Hi team as per checking account is for adjustment will be back to active status once adjustment is done. Thank you — rs__",
+        "Confirmed fraud activity, cannot back to active as per our superior's instructions, Thanks - rs__",
+        "Hi team upon checking this account is  Suspicious betting activities, account under review by Sports Provider and withdrawal on hold until 19th May-2026. Thank you - rs__",
+        "Hi team upon checking this account is for further checking. Wait for our superior decision. Thank you - rs__",
+    ];
+
     function updateTGNumbers() {
         const input = document.getElementById('tgNumberInput');
         const numberInput = input.value.trim();
+        const number = numberInput ? `rs${numberInput}` : 'rs__';
         
-        const number = numberInput ? `rs${numberInput}` : '';
-        
-        if (!number) {
-            data.tg = [
-                "Checking team - rs__",
-                "On it team. Thanks - rs__",
-                "Done team. Thanks - rs__",
-                "Verified team. Thanks - rs__",
-                "Rejected team. Thanks - rs__",
-                "For Further Checking - rs__",
-                "Hi team this account is for further review thanks — rs__",
-                "Hi team as per checking account is for adjustment will be back to active status once adjustment is done. Thank you — rs__",
-                "Confirmed fraud activity, cannot back to active as per our superior's instructions, Thanks - rs__",
-                "Hi team upon checking this account is  Suspicious betting activities, account under review by Sports Provider and withdrawal on hold until 19th May-2026. Thank you - rs__",
-                "Hi team upon checking this account is for further checking. Wait for our superior decision. Thank you - rs__",
-            ];
-        } else {
-            data.tg = [
-                `Checking team - ${number}`,
-                `On it team. Thanks - ${number}`,
-                `Done team. Thanks - ${number}`,
-                `Verified team. Thanks - ${number}`,
-                `Rejected team. Thanks - ${number}`,
-                `For Further Checking - ${number}`,
-                `Hi team this account is for further review thanks — ${number}`,
-                `Hi team as per checking account is for adjustment will be back to active status once adjustment is done. Thank you — ${number}`,
-                `Confirmed fraud activity, cannot back to active as per our superior's instructions, Thanks - ${number}`,
-                `Hi team upon checking this account is  Suspicious betting activities, account under review by Sports Provider and withdrawal on hold until 19th May-2026. Thank you - ${number}`,
-                `Hi team upon checking this account is for further checking. Wait for our superior decision. Thank you - ${number}`,
-            ];
-        }
+        // Replace rs__ with the number (rs45, rs89, etc)
+        data.tg = TG_TEMPLATES.map(template => template.replace(/rs__/g, number));
         
         if (currentTab === 'tg') {
             renderList('tg');
