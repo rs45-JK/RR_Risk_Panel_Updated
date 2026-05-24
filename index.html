@@ -203,7 +203,7 @@
         }
 
         .list-wrapper {
-            max-width: 550px;
+            max-width: 600px;
             margin: 0 auto;
             width: 100%;
         }
@@ -218,7 +218,7 @@
             transition: all 0.2s;
             display: flex;
             gap: 12px;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .remark-item:hover {
@@ -251,6 +251,8 @@
             transition: all 0.2s;
             flex-shrink: 0;
             letter-spacing: 0.5px;
+            align-self: flex-start;
+            margin-top: 2px;
         }
 
         .copy-btn:hover {
@@ -466,73 +468,81 @@
             opacity: 0.6;
         }
 
+        /* INPUT FIELDS - PERFECT ALIGNMENT */
+        .input-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .input-label {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
         .inline-input {
             background: var(--input-bg);
             border: 1px solid #334155;
             color: var(--text-main);
-            padding: 6px 10px;
-            border-radius: 4px;
+            padding: 8px 12px;
+            border-radius: 6px;
             font-size: 0.9rem;
             outline: none;
-            width: 120px;
             transition: all 0.2s;
-            margin-left: 6px;
-            margin-right: 6px;
+            height: 36px;
+            line-height: 1.2;
         }
 
         .inline-input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 2px rgba(99, 234, 212, 0.2);
+            background: #1a1d20;
         }
 
         .inline-input::placeholder {
             color: var(--text-dim);
         }
 
-        .dynamic-text {
-            display: inline;
+        .input-amount {
+            width: 100px;
         }
 
-        .paste-btn-inline {
-            background: #334155;
-            color: var(--text-main);
-            border: 1px solid #475569;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-left: 6px;
-            margin-right: 6px;
-            font-weight: 600;
+        .input-username {
+            width: 100px;
         }
 
-        .paste-btn-inline:hover {
-            background: #475569;
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .paste-btn-inline:active {
-            transform: scale(0.95);
+        .input-identifier {
+            width: 70px;
         }
 
         .amount-display {
             color: var(--accent);
             font-weight: 600;
-            margin-left: 4px;
+            min-width: 50px;
         }
 
         .inline-select {
             background: var(--input-bg);
             color: var(--text-main);
             border: 1px solid #334155;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 0.85rem;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s;
             outline: none;
+            height: 36px;
+            line-height: 1.2;
         }
 
         .inline-select:hover {
@@ -541,12 +551,45 @@
 
         .inline-select:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(99, 234, 212, 0.1);
+            box-shadow: 0 0 0 2px rgba(99, 234, 212, 0.2);
+            background: #1a1d20;
         }
 
         .inline-select option {
             background: var(--card);
             color: var(--text-main);
+        }
+
+        .separator {
+            color: var(--text-main);
+            font-weight: 600;
+            margin: 0 4px;
+            line-height: 36px;
+            height: 36px;
+        }
+
+        .cdf-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cdf-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .cdf-preview {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+            padding: 8px;
+            background: #1f2228;
+            border-left: 2px solid var(--accent);
+            border-radius: 4px;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -608,7 +651,7 @@
 
 <!-- Footer -->
 <footer>
-    Created by <span class="credit-name" >Janith K</span>
+    Created by <span class="credit-name">Janith K</span> | JK Dev
 </footer>
 
 <script>
@@ -619,7 +662,7 @@
             "Done team. Thanks - rs__",
             "Verified team. Thanks - rs__",
             "Rejected team. Thanks - rs__",
-			"For Further Checking - rs__",
+            "For Further Checking - rs__",
             "Hi team this account is for further review thanks — rs__",
             "Hi team as per checking account is for adjustment will be back to active status once adjustment is done. Thank you — rs__",
             "Confirmed fraud activity, cannot back to active as per our superior's instructions, Thanks - rs__",
@@ -627,7 +670,6 @@
             "Hi team upon checking this account is for further checking. Wait for our superior decision. Thank you - rs__",
         ],
         risk: [
-            
             "Deposit Required",
             "AB Bet. Invalid Turnover: ",
             "Active Bonus Invalid TO, Need to reach : ",
@@ -636,12 +678,14 @@
             "RAF - RAF Bonus Abuser -",
             "CDF - Chip Dumping Fraud With -",
             "SUSPICIOUS In Out Fund",
-			"Suspicious bets in Bookmaker Market-SOCCER",
+            "Suspicious bets in Bookmaker Market-SOCCER",
             "Suspicious Taixiu winning",
-			//"CDF - Chip Dumping Fraud With - UserName(M1) in EVOLUTION/Bac Bo / Suspicious In Out Fund",
-			"Suspicious  Fund in Fund out in EVOLUTION Fan Tan",
-			"Suspicious Sports Hedging",
-			"Suspicious Cricket Sports Bets",
+            "Suspicious Fund in Fund out in EVOLUTION Fan Tan",
+            "Suspicious Sports Hedging",
+            "Suspicious Cricket Sports Bets",
+            "Suspicious CF winning",
+            "Suspicious Deposit ",
+            "Slots FDB Abuser ",
         ]
     };
 
@@ -660,7 +704,6 @@
         document.getElementById(tab).classList.add('active');
         event.target.classList.add('active');
         
-        // Show/hide TG input bar based on active tab
         const tgInputBar = document.getElementById('tgInputBar');
         if (tab === 'tg-chat') {
             tgInputBar.classList.remove('hidden');
@@ -707,70 +750,76 @@
         }
 
         listEl.innerHTML = items.map((text, idx) => {
-            // Check if this is the AB Bet item with dynamic input
             if (text.includes("AB Bet. Invalid Turnover:")) {
                 return `
                     <div class="remark-item">
-                        <div style="flex: 1;">
-                            <span class="dynamic-text">AB Bet. Invalid Turnover: </span>
-                            <input type="text" id="abBetInput" class="inline-input" placeholder="enter amount" onchange="updateABBetAmount()" oninput="updateABBetAmount()" title="Enter or paste amount here">
-                            <span id="abBetAmount" class="amount-display"></span>
+                        <div class="input-section">
+                            <div class="input-row">
+                                <span class="input-label">AB Bet. Invalid Turnover:</span>
+                                <input type="text" id="abBetInput" class="inline-input input-amount" placeholder="0.00" onchange="updateABBetAmount()" oninput="updateABBetAmount()">
+                                <span id="abBetAmount" class="amount-display"></span>
+                            </div>
                         </div>
-                        <button class="copy-btn" onclick="copyABBetText()" title="Copy to clipboard">Copy</button>
+                        <button class="copy-btn" onclick="copyABBetText()">Copy</button>
                     </div>
                 `;
             }
             
-            // Check if this is the Active Bonus item with dynamic input
             if (text.includes("Active Bonus Invalid TO, Need to reach :")) {
                 return `
                     <div class="remark-item">
-                        <div style="flex: 1;">
-                            <span class="dynamic-text">Active Bonus Invalid TO, Need to reach : </span>
-                            <input type="text" id="activeBonusInput" class="inline-input" placeholder="enter amount" onchange="updateActiveBonusAmount()" oninput="updateActiveBonusAmount()" title="Enter or paste amount here">
-                            <span id="activeBonusAmount" class="amount-display"></span>
+                        <div class="input-section">
+                            <div class="input-row">
+                                <span class="input-label">Active Bonus Invalid TO, Need to reach:</span>
+                                <input type="text" id="activeBonusInput" class="inline-input input-amount" placeholder="0.00" onchange="updateActiveBonusAmount()" oninput="updateActiveBonusAmount()">
+                                <span id="activeBonusAmount" class="amount-display"></span>
+                            </div>
                         </div>
-                        <button class="copy-btn" onclick="copyActiveBonusText()" title="Copy to clipboard">Copy</button>
+                        <button class="copy-btn" onclick="copyActiveBonusText()">Copy</button>
                     </div>
                 `;
             }
             
-            // Check if this is the CDF item with dynamic dropdowns and input
             if (text.includes("CDF - Chip Dumping Fraud With -")) {
                 return `
                     <div class="remark-item">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-                            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                                <span class="dynamic-text">CDF - Chip Dumping Fraud With - </span>
-                                <input type="text" id="cdfUsernameInput" class="inline-input" placeholder="UserName" style="width: 100px;" onchange="updateCDFText()" oninput="updateCDFText()" title="Enter username">
-                                <span style="color: var(--text);">(</span>
-                                <input type="text" id="cdfM1Input" class="inline-input" placeholder="M1" style="width: 60px;" onchange="updateCDFText()" oninput="updateCDFText()" title="Enter identifier like M1, M2, etc">
-                                <span style="color: var(--text);">)</span>
-                                <span style="color: var(--text);"> in </span>
-                                <select id="cdfPlatformDropdown" class="inline-select" onchange="updateCDFText()" title="Select platform">
-                                    <option value="">-- Select --</option>
-                                    <option value="EVOLUTION">EVOLUTION</option>
-                                    <option value="SEXYBCRT">SEXYBCRT</option>
-                                    <option value="KINGMAKER">KINGMAKER</option>
-                                    <option value="PP">PP</option>
-                                </select>
-                                <span style="color: var(--text);">/</span>
-                                <select id="cdfGameDropdown" class="inline-select" onchange="updateCDFText()" title="Select game">
-                                    <option value="">-- Select --</option>
-                                    <option value="Bac Bo">Bac Bo</option>
-                                    <option value="Baccarat">Baccarat</option>
-                                    <option value="Roulette">Roulette</option>
-                                </select>
-                                <span style="color: var(--text);"> / Suspicious In Out Fund</span>
+                        <div class="input-section">
+                            <div class="cdf-section">
+                                <div class="cdf-row">
+                                    <span class="input-label">CDF - Chip Dumping Fraud With:</span>
+                                    <input type="text" id="cdfUsernameInput" class="inline-input input-username" placeholder="UserName" onchange="updateCDFText()" oninput="updateCDFText()">
+                                    <span class="separator">(</span>
+                                    <input type="text" id="cdfM1Input" class="inline-input input-identifier" placeholder="M1" onchange="updateCDFText()" oninput="updateCDFText()">
+                                    <span class="separator">)</span>
+                                </div>
+                                <div class="cdf-row">
+                                    <span class="input-label">in</span>
+                                    <select id="cdfPlatformDropdown" class="inline-select" style="width: 140px;" onchange="updateCDFText()">
+                                        <option value="">-- Select Platform --</option>
+                                        <option value="EVOLUTION">EVOLUTION</option>
+                                        <option value="SEXYBCRT">SEXYBCRT</option>
+                                        <option value="KINGMAKER">KINGMAKER</option>
+                                        <option value="PP">PP</option>
+                                    </select>
+                                    <span class="separator">/</span>
+                                    <select id="cdfGameDropdown" class="inline-select" style="width: 140px;" onchange="updateCDFText()">
+                                        <option value="">-- Select Game --</option>
+                                        <option value="Bac Bo">Bac Bo</option>
+                                        <option value="Baccarat">Baccarat</option>
+                                        <option value="Roulette">Roulette</option>
+                                    </select>
+                                </div>
+                                <div class="cdf-row">
+                                    <span class="input-label">/ Suspicious In Out Fund</span>
+                                </div>
+                                <div id="cdfPreview" class="cdf-preview"></div>
                             </div>
-                            <span id="cdfPreview" style="font-size: 0.85rem; color: var(--text-dim); margin-top: 4px;"></span>
                         </div>
-                        <button class="copy-btn" onclick="copyCDFText()" title="Copy to clipboard">Copy</button>
+                        <button class="copy-btn" onclick="copyCDFText()">Copy</button>
                     </div>
                 `;
             }
             
-            // Regular items
             return `
                 <div class="remark-item">
                     <span class="remark-text">${text}</span>
@@ -799,8 +848,6 @@
         }
         
         let formattedAmount = amount;
-        
-        // Try to format the number
         const cleanNum = amount.replace(/,/g, '');
         const num = parseFloat(cleanNum);
         
@@ -834,8 +881,6 @@
         }
         
         let formattedAmount = amount;
-        
-        // Try to format the number
         const cleanNum = amount.replace(/,/g, '');
         const num = parseFloat(cleanNum);
         
@@ -859,7 +904,6 @@
         
         if (!preview) return;
         
-        // Build preview text
         let previewText = 'CDF - Chip Dumping Fraud With -';
         
         if (username) {
@@ -877,7 +921,7 @@
         
         previewText += ' / Suspicious In Out Fund';
         
-        preview.textContent = 'Preview: ' + previewText;
+        preview.textContent = '✓ Preview: ' + previewText;
     }
 
     function copyCDFText() {
@@ -888,7 +932,6 @@
         
         let text = 'CDF - Chip Dumping Fraud With -';
         
-        // Add username with M1 only if username exists
         if (username) {
             text += ` ${username}`;
             if (m1) {
@@ -896,7 +939,6 @@
             }
         }
         
-        // Add platform and game only if they're selected
         if (platform || game) {
             text += ' in';
             if (platform) text += ` ${platform}`;
@@ -939,16 +981,13 @@
         if (e.key === 'Enter' && e.ctrlKey) saveItem();
     });
 
-    // TG Numbers Update Function
     function updateTGNumbers() {
         const input = document.getElementById('tgNumberInput');
         const numberInput = input.value.trim();
         
-        // Add "rs" prefix to the number
         const number = numberInput ? `rs${numberInput}` : '';
         
         if (!number) {
-            // If input is empty, revert to original
             data.tg = [
                 "Checking team - rs__",
                 "On it team. Thanks - rs__",
@@ -963,7 +1002,6 @@
                 "Hi team upon checking this account is for further checking. Wait for our superior decision. Thank you - rs__",
             ];
         } else {
-            // Replace rs__ with the entered number
             data.tg = [
                 `Checking team - ${number}`,
                 `On it team. Thanks - ${number}`,
@@ -979,13 +1017,11 @@
             ];
         }
         
-        // Re-render only if TG tab is active
         if (currentTab === 'tg') {
             renderList('tg');
         }
     }
 
-    // Initial render
     renderList('tg');
     renderList('risk');
 </script>
