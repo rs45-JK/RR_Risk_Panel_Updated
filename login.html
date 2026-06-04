@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Access</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root {
+    --bg: #0f0f13;
+    --surface: #18181f;
+    --surface2: #222230;
+    --border: rgba(255,255,255,0.07);
+    --accent: #6c63ff;
+    --accent2: #a78bfa;
+    --text: #f0eeff;
+    --muted: #9090aa;
+    --success: #34d399;
+    --danger: #f87171;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Login Page ── */
+  #login-page {
+    text-align: center;
+    padding: 2rem;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .logo-ring {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 30px;
+  }
+
+  #login-page h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+
+  #login-page p.sub {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 2.2rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+  }
+
+  .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    background: #fff;
+    color: #1a1a2e;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .google-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(108,99,255,0.35);
+  }
+
+  .google-btn svg { flex-shrink: 0; }
+
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 1.4rem 0;
+    color: var(--muted); font-size: 0.8rem;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    height: 1px; background: var(--border);
+  }
+
+  .notice {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Error message */
+  #error-box {
+    display: none;
+    background: rgba(248,113,113,0.1);
+    border: 1px solid rgba(248,113,113,0.3);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    color: var(--danger);
+    margin-top: 1rem;
+    text-align: left;
+  }
+
+  /* ── Dashboard ── */
+  #dashboard {
+    display: none;
+    width: 100%;
+    max-width: 760px;
+    padding: 2rem;
+  }
+
+  .dash-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+  }
+
+  .avatar-placeholder {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem;
+    border: 2px solid var(--accent);
+  }
+
+  .user-name { font-weight: 600; font-size: 0.95rem; }
+  .user-email { font-size: 0.78rem; color: var(--muted); }
+
+  .logout-btn {
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .logout-btn:hover { color: var(--danger); border-color: rgba(248,113,113,0.4); }
+
+  .welcome-banner {
+    background: linear-gradient(135deg, rgba(108,99,255,0.18), rgba(167,139,250,0.1));
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .welcome-banner h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .welcome-banner p { font-size: 0.88rem; color: var(--muted); }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(52,211,153,0.12);
+    border: 1px solid rgba(52,211,153,0.3);
+    color: var(--success);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    margin-bottom: 0.7rem;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+  }
+
+  .info-card .label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+  }
+  .info-card .value { font-size: 0.95rem; font-weight: 500; }
+  .info-card .value.accent { color: var(--accent2); }
+
+  /* Loading spinner */
+  #loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 520px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .dash-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN PAGE ══════════ -->
+<div id="login-page">
+  <div class="logo-ring">🔐</div>
+  <h1>Secure Access</h1>
+  <p class="sub">Sign in with your Google account to continue</p>
+
+  <div class="card">
+    <button class="google-btn" onclick="startGoogleLogin()">
+      <svg width="20" height="20" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Sign in with Google
+    </button>
+
+    <div id="error-box"></div>
+
+    <div class="divider">access restricted</div>
+    <p class="notice">Only authorised email addresses can access this system. Unauthorised accounts will be denied.</p>
+  </div>
+</div>
+
+<!-- ══════════ LOADING ══════════ -->
+<div id="loading">
+  <div class="spinner"></div>
+  <span>Verifying access…</span>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div class="user-info">
+      <div class="avatar-placeholder" id="avatar-initials"></div>
+      <div>
+        <div class="user-name" id="dash-name"></div>
+        <div class="user-email" id="dash-email"></div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Sign out</button>
+  </div>
+
+  <div class="welcome-banner">
+    <div class="status-pill"><div class="dot"></div> Access granted</div>
+    <h2>Welcome back, <span id="first-name"></span> 👋</h2>
+    <p>You are authenticated and have access to this system.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="info-card">
+      <div class="label">Session</div>
+      <div class="value accent" id="session-status">Active</div>
+    </div>
+    <div class="info-card">
+      <div class="label">Expires</div>
+      <div class="value" id="session-expiry"></div>
+    </div>
+    <div class="info-card">
+      <div class="label">Last login</div>
+      <div class="value" id="last-login"></div>
+    </div>
+    <div class="info-card">
+      <div class="label">Access level</div>
+      <div class="value accent">Authorised</div>
+    </div>
+  </div>
+
+  <!-- ✏️  YOUR PROTECTED CONTENT GOES BELOW -->
+  <div class="info-card" style="margin-top:0">
+    <div class="label">Protected content</div>
+    <div class="value" style="color:var(--muted); font-size:0.9rem; margin-top:0.5rem">
+      Add your app content here. This area is only visible to authorised users.
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+//   ✏️  CONFIGURATION — edit these values
+// ════════════════════════════════════════════
+
+const CONFIG = {
+  // 1. Your Google OAuth Client ID
+  //    Get it free at: https://console.cloud.google.com
+  //    Create project → APIs & Services → Credentials → OAuth 2.0 Client ID (Web)
+  GOOGLE_CLIENT_ID: "YOUR_GOOGLE_CLIENT_ID_HERE.apps.googleusercontent.com",
+
+  // 2. List of email addresses that are allowed in
+  ALLOWED_EMAILS: [
+    "alice@gmail.com",
+    "bob@yourcompany.com",
+    "you@example.com"
+    // add as many as you need
+  ],
+
+  // 3. How many days to stay logged in without re-authenticating
+  SESSION_DAYS: 30
+};
+
+// ════════════════════════════════════════════
+//   Session management (localStorage)
+// ════════════════════════════════════════════
+
+const SESSION_KEY = "secure_auth_session";
+
+function saveSession(user) {
+  const expiry = Date.now() + CONFIG.SESSION_DAYS * 86400000;
+  localStorage.setItem(SESSION_KEY, JSON.stringify({
+    name: user.name,
+    email: user.email,
+    picture: user.picture,
+    expiry,
+    loginTime: Date.now()
+  }));
+}
+
+function loadSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    if (Date.now() > s.expiry) { localStorage.removeItem(SESSION_KEY); return null; }
+    return s;
+  } catch { return null; }
+}
+
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+// ════════════════════════════════════════════
+//   UI helpers
+// ════════════════════════════════════════════
+
+function show(id)  { document.getElementById(id).style.display = (id === 'loading') ? 'flex' : 'block'; }
+function hide(id)  { document.getElementById(id).style.display = 'none'; }
+function showError(msg) {
+  const box = document.getElementById('error-box');
+  box.textContent = "⛔ " + msg;
+  box.style.display = 'block';
+}
+
+function renderDashboard(session) {
+  const initials = session.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('avatar-initials').textContent = initials;
+  document.getElementById('dash-name').textContent = session.name;
+  document.getElementById('dash-email').textContent = session.email;
+  document.getElementById('first-name').textContent = session.name.split(' ')[0];
+
+  const exp = new Date(session.expiry);
+  document.getElementById('session-expiry').textContent = exp.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+
+  const login = new Date(session.loginTime);
+  document.getElementById('last-login').textContent = login.toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+
+  hide('login-page');
+  hide('loading');
+  show('dashboard');
+}
+
+// ════════════════════════════════════════════
+//   Google OAuth flow
+// ════════════════════════════════════════════
+
+function startGoogleLogin() {
+  if (CONFIG.GOOGLE_CLIENT_ID === "https://323501406243-6a2r6cf3n2k6bc896kpnfc6fv2a7vfq8.apps.googleusercontent.com") {
+    showError("Please set your Google Client ID in the CONFIG section of the code first.");
+    return;
+  }
+
+  hide('login-page');
+  show('loading');
+
+  google.accounts.id.initialize({
+    client_id: CONFIG.GOOGLE_CLIENT_ID,
+    callback: handleGoogleResponse,
+    auto_select: false
+  });
+
+  google.accounts.id.prompt(notification => {
+    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+      // Fall back to popup
+      google.accounts.id.renderButton(
+        document.createElement('div'),
+        { theme: 'outline', size: 'large' }
+      );
+      // Use the One Tap popup directly
+      hide('loading');
+      show('login-page');
+      showError("Popup was blocked. Please allow popups for this page and try again.");
+    }
+  });
+}
+
+function handleGoogleResponse(response) {
+  // Decode the JWT id_token (no library needed — just base64 decode the payload)
+  try {
+    const parts = response.credential.split('.');
+    const payload = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+
+    const email = payload.email;
+    const name  = payload.name;
+    const picture = payload.picture;
+
+    // Check whitelist
+    const normalised = CONFIG.ALLOWED_EMAILS.map(e => e.trim().toLowerCase());
+    if (!normalised.includes(email.trim().toLowerCase())) {
+      hide('loading');
+      show('login-page');
+      showError(`Access denied. ${email} is not on the authorised list.`);
+      return;
+    }
+
+    // Save persistent session
+    const user = { name, email, picture };
+    saveSession(user);
+
+    // Show dashboard
+    //renderDashboard(loadSession());
+	window.location.href = "index.html"; // or wherever your main page is
+
+  } catch (e) {
+    hide('loading');
+    show('login-page');
+    showError("Authentication failed. Please try again.");
+    console.error(e);
+  }
+}
+
+function logout() {
+  clearSession();
+  if (window.google && google.accounts) {
+    google.accounts.id.disableAutoSelect();
+  }
+  hide('dashboard');
+  show('login-page');
+  document.getElementById('error-box').style.display = 'none';
+}
+
+// ════════════════════════════════════════════
+//   On page load — check existing session
+// ════════════════════════════════════════════
+
+window.addEventListener('load', () => {
+  const session = loadSession();
+  if (session) {
+    renderDashboard(session);
+  }
+  // If no session, login page is already visible
+});
+</script>
+</body>
+</html>
